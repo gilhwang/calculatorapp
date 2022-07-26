@@ -73,9 +73,10 @@ void pairBrackets(vector<pair<int,int>> & bracketSets,
         }
     }
     
-    cout << "Bracket Sets: ";
+    // Print out the bracket pairs
+    cout << " Bracket Sets: ";
     for (auto it = bracketSets.begin(); it != bracketSets.end(); it++){
-        cout << "(" << it->first << ", " << it->second << ")";
+        cout << "(" << it->first << "," << it->second << ") ";
     }
     cout << endl;
     
@@ -112,18 +113,25 @@ double calculate(string userInput, const vector<pair<int,int>> & bracketSets){
         return INVALID;
     }
     
+    // Print out which substring is being calculated
+    std::cout << " Calculating subexpression: ";
+    for (int i=0; i<userInput.size(); i++){
+        std::cout << userInput.at(i);
+    }
+    std::cout << std::endl;
+    
     // Search through input to split calculable objects
     for (int pos = 0; pos < userInput.size(); pos++){
         // Encountered number
         if (userInput.at(pos) >= '0' && userInput.at(pos) <= '9'){
             int powerCount = 0;
             int decimalCount = 1;
+            num = 0;    // reset num
             
             while(pos != userInput.size() && userInput.at(pos) >= '0' && userInput.at(pos) <= '9'){
                 int currentInt = userInput.at(pos) - '0';
                 num = 10*num + currentInt;
                 pos++;
-                powerCount++;  
             }
             
             if (pos != userInput.size() && userInput.at(pos) == '.'){
@@ -172,15 +180,24 @@ double calculate(string userInput, const vector<pair<int,int>> & bracketSets){
         
         // Encountered Bracket
         else if (userInput.at(pos) == '('){
-            int posClosed = 0;
             // Find the closing bracket
-            for (int i = 0; i < bracketSets.size(); i++){
-                if (bracketSets.at(i).first == pos){
-                    posClosed = bracketSets.at(i).second;
+            int posClosed = 0;
+            int numInnerLeftBracket = 0;
+            for (int i = pos+1; i < userInput.size(); i++){
+                if (userInput.at(i) == ')'){
+                    if (numInnerLeftBracket == 0){
+                        posClosed = i;
+                        break;
+                    }
+                    else{
+                        numInnerLeftBracket--;
+                    }
+                }
+                else if (userInput.at(i) == '('){
+                    numInnerLeftBracket++;
                 }
             }
-            
-            num = calculate(userInput.substr(pos+1,posClosed-1), bracketSets);
+            num = calculate(userInput.substr(pos+1,posClosed-pos-1), bracketSets);
             calcObjects.push_back(num);
             pos = posClosed;
         }
@@ -264,7 +281,7 @@ void printResult(double result){
         cout << "Invalid Input! Please try again." << endl;
     }
     else{
-        cout << "The result is: " << result << endl;
+        std::cout << "=== Final Result : [" << result << "] ===" << std::endl;
     }
 }
 

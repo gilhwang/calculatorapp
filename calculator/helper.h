@@ -20,7 +20,7 @@ extern bool errorFlag;
 #define INVALID -1
 #define LEFT_BRACKET "("
 #define RIGHT_BRACKET ")"
-#define ADD -1
+#define ADD -222333.554
 #define SUBTRACT -222333.555
 #define MULTIPLY -222333.556
 #define DIVIDE -222333.557
